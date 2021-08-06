@@ -93,6 +93,7 @@ Attributes may react to self or other attributes value change. The change is def
 
  *manifest.json* file example:
 
+
 ```json
 {
   "elements": {
