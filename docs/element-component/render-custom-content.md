@@ -2,20 +2,41 @@
 
 ## Overview
 
-To render a custom content in the editor like the shortcode, a helper element is used with a class of `vcvhelper`.
 
-**Example**:
-```javascript
-<div className='vcvhelper' ref={this.ref} data-vcvs-html={shortcode} />
+To render dynamic content like shortcodes or custom HTML in the editor, the following structure is used in Visual Composer:
+
+```jsx
+<div className='vcvhelper' ref={this.vcvhelper} data-vcvs-html={shortcode} />
 ```
+This structure helps manage raw content, such as shortcodes, and ensures it is properly rendered in both the editor and the live view. Let’s break down the key parts:
 
-This helper element is used to display the original element in the editor while storing the raw content, both shortcode and HTML string in the `data` attribute. The content inside the `data` attribute is then compiled by the editor to display it properly in the View Page.
+### `vcvhelper` Class
 
-This element comes in handy when the content is changed dynamically and the JavaScript is dependant on the markup. The example could be a shortcode or a complex element like the Accordion which utilizes the same JavaScript both in the editor and public view.
+The `vcvhelper` class in Visual Composer is used to mark elements containing dynamic content, like shortcodes or custom HTML, that need to be processed by the editor. It signals that the raw content should be compiled and rendered dynamically in the editor.
 
-* `vcvhelper` – a reserved class name in the editor by which it is recognized;
-* `ref` – a [React reference](https://reactjs.org/docs/refs-and-the-dom.html) to the DOM element;
-* `data-vcvs-html` – an attribute which shortcode or HTML string.
+### `data-vcvs-html`
+
+The `data-vcvs-html` attribute stores raw content, like shortcodes or HTML, to be processed by Visual Composer. The editor compiles this content and renders it dynamically in both the editor and the live view.
+
+### `vcvhelper` Ref
+
+The ref attribute is used to attach a [React reference](https://reactjs.org/docs/refs-and-the-dom.html) (`this.vcvhelper`) to the DOM element with `vcvhelper` class. React refs are used to access the DOM element directly and manage dynamic updates to the content.
+
+`this.vcvhelper` is a React ref created using React.createRef(). It is assigned to the vcvhelper element, allowing you to programmatically access and manipulate the DOM element.
+
+```jsx
+this.vcvhelper = React.createRef()
+```
+By attaching the ref to the vcvhelper element, you can reference the DOM node directly and manage content updates as necessary.
+
+The `this.vcvhelper.current` property provides direct access to the DOM element that the React ref (`this.vcvhelper`) is pointing to. React refs store the DOM element in the .current property once the component has mounted.
+
+```jsx
+componentDidMount() {
+	super.updateShortcodeToHtml(this.props.atts.shortcode, this.vcvhelper.current)
+}
+```
+In this example, `this.vcvhelper.current` references the actual DOM element, and we use it to dynamically update the content by calling the [updateShortcodeToHtml](/element-component/element-component-methods#updateshortcodetohtml) method, which processes the raw shortcode and inserts the compiled HTML into the element.
 
 :::caution
 Note: `vcvhelper` element is used only in the editor. On public view, it will be stripped.
